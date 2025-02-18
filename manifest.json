@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "Relax Translator",
+  "version": "1.0.3",
+  "description": "Relax 轻松翻译，好用的实时翻译插件，按（Ctrl/Command/Alt）键启动，移动鼠标开始翻译。",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "contextMenus"
+  ],
+  "host_permissions": [
+    "https://api.cognitive.microsofttranslator.com/*",
+    "https://translate.youdao.com/*",
+    "https://translate.googleapis.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "css": ["styles.css", "mode-switch.css"],
+    "js": ["content.js"]
+  }],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

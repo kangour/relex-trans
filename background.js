@@ -1,0 +1,330 @@
+let currentTranslator = 'google';
+let microsoftApiKey = '';
+let youdaoApiKey = '';
+let deepseekApiKey = '';
+let kimiApiKey = '';
+let chatgptApiKey = '';
+let zhipuApiKey = '';
+
+// 从storage中加载配置
+chrome.storage.sync.get(['translator', 'microsoftApiKey', 'youdaoApiKey', 'deepseekApiKey', 'kimiApiKey', 'chatgptApiKey', 'zhipuApiKey'], (result) => {
+  if (result.translator) {
+    currentTranslator = result.translator;
+  }
+  if (result.microsoftApiKey) {
+    microsoftApiKey = result.microsoftApiKey;
+  }
+  if (result.youdaoApiKey) {
+    youdaoApiKey = result.youdaoApiKey;
+  }
+  if (result.deepseekApiKey) {
+    deepseekApiKey = result.deepseekApiKey;
+  }
+  if (result.kimiApiKey) {
+    kimiApiKey = result.kimiApiKey;
+  }
+  if (result.chatgptApiKey) {
+    chatgptApiKey = result.chatgptApiKey;
+  }
+  if (result.zhipuApiKey) {
+    zhipuApiKey = result.zhipuApiKey;
+  }
+});
+
+// 监听storage变化
+chrome.storage.onChanged.addListener((changes) => {
+  if (changes.translator) {
+    currentTranslator = changes.translator.newValue;
+  }
+  if (changes.microsoftApiKey) {
+    microsoftApiKey = changes.microsoftApiKey.newValue;
+  }
+  if (changes.youdaoApiKey) {
+    youdaoApiKey = changes.youdaoApiKey.newValue;
+  }
+  if (changes.deepseekApiKey) {
+    deepseekApiKey = changes.deepseekApiKey.newValue;
+  }
+  if (changes.kimiApiKey) {
+    kimiApiKey = changes.kimiApiKey.newValue;
+  }
+  if (changes.chatgptApiKey) {
+    chatgptApiKey = changes.chatgptApiKey.newValue;
+  }
+  if (changes.zhipuApiKey) {
+    zhipuApiKey = changes.zhipuApiKey.newValue;
+  }
+});
+
+// 创建右键菜单
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.contextMenus.create({
+    id: 'wordTranslation',
+    title: '开始单词翻译',
+    contexts: ['all']
+  });
+  chrome.contextMenus.create({
+    id: 'sentenceTranslation',
+    title: '开始句子翻译',
+    contexts: ['all']
+  });
+});
+
+// 处理右键菜单点击事件
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  if (info.menuItemId === 'wordTranslation') {
+    chrome.tabs.sendMessage(tab.id, { type: 'switchMode', mode: 'word' });
+  } else if (info.menuItemId === 'sentenceTranslation') {
+    chrome.tabs.sendMessage(tab.id, { type: 'switchMode', mode: 'sentence' });
+  }
+});
+
+// 处理来自content script的消息
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.type === 'translate') {
+    translateText(request.text)
+      .then(translation => {
+        sendResponse({ translation });
+      })
+      .catch(error => {
+        console.error('Translation error:', error);
+        const translatorNames = {
+          'google': '谷歌翻译',
+          'microsoft': '微软翻译',
+          'youdao': '有道翻译',
+          'deepseek': 'DeepSeek翻译',
+          'kimi': 'Kimi翻译',
+          'chatgpt': 'ChatGPT翻译',
+          'zhipu': '智谱AI翻译'
+        };
+        sendResponse({ error: `【${translatorNames[currentTranslator]}】翻译失败：${error.message}` });
+      });
+    return true; // 保持消息通道开放
+  }
+});
+
+// 翻译文本
+async function translateText(text) {
+  switch (currentTranslator) {
+    case 'microsoft':
+      return await microsoftTranslate(text);
+    case 'youdao':
+      return await youdaoTranslate(text);
+    case 'deepseek':
+      return await deepseekTranslate(text);
+    case 'kimi':
+      return await kimiTranslate(text);
+    case 'chatgpt':
+      return await chatgptTranslate(text);
+    case 'zhipu':
+      return await zhipuTranslate(text);
+    case 'google':
+    default:
+      return await googleTranslate(text);
+  }
+}
+
+// 谷歌翻译
+async function googleTranslate(text) {
+  const response = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=zh-CN&dt=t&q=${encodeURIComponent(text)}`);
+  console.log("谷歌翻译请求结果：", response)
+  const data = await response.json();
+  return data[0][0][0];
+}
+
+// 微软翻译
+async function microsoftTranslate(text) {
+  if (!microsoftApiKey) {
+    throw new Error('请先设置微软翻译API密钥');
+  }
+
+  const response = await fetch('https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=auto&to=zh-Hans', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Ocp-Apim-Subscription-Key': microsoftApiKey,
+    },
+    body: JSON.stringify([{ text }]),
+  });
+
+  console.log("微软翻译请求结果：", response)
+  const data = await response.json();
+  return data[0].translations[0].text;
+}
+
+// 有道翻译
+async function youdaoTranslate(text) {
+  if (!youdaoApiKey) {
+    throw new Error('请先设置有道翻译API密钥');
+  }
+
+  const response = await fetch('https://openapi.youdao.com/api', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+      q: text,
+      from: 'auto',
+      to: 'zh-CHS',
+      appKey: youdaoApiKey,
+      salt: Date.now(),
+      sign: generateYoudaoSign(text, youdaoApiKey),
+    }),
+  });
+
+  console.log("有道翻译请求结果：", response)
+  const data = await response.json();
+  return data.translation[0];
+}
+
+// DeepSeek翻译
+async function deepseekTranslate(text) {
+  if (!deepseekApiKey) {
+    throw new Error('请先设置DeepSeek API密钥');
+  }
+
+  const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${deepseekApiKey}`,
+    },
+    body: JSON.stringify({
+      model: 'deepseek-chat',
+      messages: [
+        {
+          role: 'system',
+          content: '你是一个翻译助手，请将用户输入的文本翻译成中文，只需要输出翻译结果，不需要解释。'
+        },
+        {
+          role: 'user',
+          content: text
+        }
+      ]
+    })
+  });
+
+  const data = await response.json();
+  if (data.error) {
+    throw new Error(data.error.message);
+  }
+  return data.choices[0].message.content;
+}
+
+// Kimi翻译
+async function kimiTranslate(text) {
+  if (!kimiApiKey) {
+    throw new Error('请先设置Kimi API密钥');
+  }
+
+  const response = await fetch('https://api.moonshot.cn/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${kimiApiKey}`,
+    },
+    body: JSON.stringify({
+      model: 'moonshot-v1-8k',
+      messages: [
+        {
+          role: 'system',
+          content: '你是一个翻译助手，请将用户输入的文本翻译成中文，只需要输出翻译结果，不需要解释。'
+        },
+        {
+          role: 'user',
+          content: text
+        }
+      ]
+    })
+  });
+
+  console.log("kimi 翻译请求结果：", response)
+  const data = await response.json();
+  if (data.error) {
+    throw new Error(data.error.message);
+  }
+  return data.choices[0].message.content;
+}
+
+// ChatGPT翻译
+async function chatgptTranslate(text) {
+  if (!chatgptApiKey) {
+    throw new Error('请先设置ChatGPT API密钥');
+  }
+
+  const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${chatgptApiKey}`,
+    },
+    body: JSON.stringify({
+      model: 'gpt-3.5-turbo',
+      messages: [
+        {
+          role: 'system',
+          content: '你是一个翻译助手，请将用户输入的文本翻译成中文，只需要输出翻译结果，不需要解释。'
+        },
+        {
+          role: 'user',
+          content: text
+        }
+      ]
+    })
+  });
+
+  console.log("chatgpt 翻译请求结果：", response)
+  const data = await response.json();
+  if (data.error) {
+    throw new Error(data.error.message);
+  }
+  return data.choices[0].message.content;
+}
+
+// 智谱AI翻译
+async function zhipuTranslate(text) {
+  if (!zhipuApiKey) {
+    throw new Error('请先设置智谱AI API密钥');
+  }
+  console.log("智谱AI翻译请求参数：", text)
+
+  const response = await fetch('https://open.bigmodel.cn/api/paas/v4/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${zhipuApiKey}`,
+    },
+    body: JSON.stringify({
+      model: 'glm-4',
+      messages: [
+        {
+          role: 'system',
+          content: '你是一个翻译助手，请将用户输入的文本翻译成中文，只需要输出翻译结果，不需要解释。'
+        },
+        {
+          role: 'user',
+          content: text
+        }
+      ],
+      stream: false
+    })
+  });
+
+  const data = await response.json();
+  console.log("智谱AI翻译请求结果：", data);
+  if (data.error) {
+    throw new Error(data.error.message || '翻译请求失败');
+  }
+  return data.choices[0].message.content;
+}
+
+// 生成有道翻译签名
+function generateYoudaoSign(text, appKey) {
+  const salt = Date.now();
+  const str = appKey + text + salt + appKey;
+  return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str))
+    .then(buffer => Array.from(new Uint8Array(buffer))
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join(''));
+}
