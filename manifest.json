@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "Relax Trans(轻松翻译)",
+  "version": "1.0.5",
+  "description": "Relax 轻松翻译，自动识别鼠标附近的文字，跟随鼠标实时翻译，让阅读外文轻松专注。按（Ctrl/Command/Alt）键启动。",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "contextMenus"
+  ],
+  "host_permissions": [
+    "https://api.cognitive.microsofttranslator.com/*",
+    "https://edge.microsoft.com/*",
+    "https://translate.googleapis.com/*",
+    "https://api.moonshot.cn/*",
+    "https://open.bigmodel.cn/*",
+    "https://api.deepseek.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "css": ["styles.css", "mode-switch.css"],
+    "js": ["content.js"]
+  }],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

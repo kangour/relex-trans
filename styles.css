@@ -1,0 +1,19 @@
+.relax-translator-popup {
+  position: fixed;
+  z-index: 999999;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333333;
+  max-width: 300px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  word-wrap: break-word;
+  transition: opacity 0.2s;
+}
+
+.relax-translator-popup:empty {
+  display: none;
+}

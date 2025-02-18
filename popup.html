@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Relax Translator 设置</title>
+  <style>
+    body {
+      width: 280px;
+      padding: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      margin: 0;
+    }
+    .container {
+      width: 100%;
+    }
+    h1 {
+      font-size: 18px;
+      margin: 0 0 16px 0;
+      color: #333;
+    }
+    .usage-guide {
+      margin-bottom: 16px;
+      padding: 12px;
+      background-color: #f8f9fa;
+      border-radius: 4px;
+      font-size: 13px;
+      color: #666;
+      line-height: 1.6;
+    }
+    .usage-guide ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+    .usage-guide li {
+      margin-bottom: 6px;
+    }
+    .form-group {
+      margin-bottom: 12px;
+    }
+    label {
+      display: block;
+      margin-bottom: 4px;
+      color: #666;
+      font-size: 13px;
+    }
+    select, input[type="text"] {
+      width: 100%;
+      padding: 6px 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 13px;
+      box-sizing: border-box;
+    }
+    .input-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .clear-btn {
+      background-color: #dc3545;
+      color: white;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: background-color 0.3s;
+      flex-shrink: 0;
+    }
+    .clear-btn:hover {
+      background-color: #b1a8a8;
+    }
+    .apply-btn {
+      background-color: #007bff;
+      color: white;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: background-color 0.3s;
+      flex-shrink: 0;
+    }
+    .apply-btn:hover {
+      background-color: #0056b3;
+    }
+    .save-btn {
+      background-color: #4CAF50;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      width: 100%;
+      transition: background-color 0.3s;
+    }
+    .save-btn:hover {
+      background-color: #45a049;
+    }
+    .status {
+      margin-top: 8px;
+      padding: 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      display: none;
+    }
+    .success {
+      background-color: #dff0d8;
+      color: #3c763d;
+    }
+    .error {
+      background-color: #f2dede;
+      color: #a94442;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>翻译设置</h1>
+    <div class="usage-guide">
+      <ul>
+        <li>🔥 按（Ctrl/Command/Alt）键启动，移动鼠标开始翻译。</li>
+        <li>🔄 再次按（Ctrl/Command/Alt）可以切换单词 / 句子翻译。</li>
+        <li>⚙️ 支持 AI 翻译（填写自己的 API 密钥）</li>
+      </ul>
+    </div>
+    <div class="form-group">
+      <label for="translator">选择翻译服务：</label>
+      <select id="translator">
+        <option value="microsoft">微软翻译</option>
+        <option value="google">谷歌翻译</option>
+        <option value="deepseek">DeepSeek AI 翻译</option>
+        <option value="zhipu">智谱 AI 翻译</option>
+        <option value="kimi">Kimi AI 翻译</option>
+        <option value="chatgpt">ChatGPT AI 翻译</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="apiKey">API密钥：</label>
+      <div class="input-group">
+        <input type="text" id="apiKey" placeholder="谷歌 / 微软翻译无需密钥。">
+        <button class="apply-btn" id="applyApiKey">申请</button>
+        <button class="clear-btn" id="clearApiKey">重置</button>
+      </div>
+    </div>
+    <button class="save-btn" id="save">保存设置</button>
+    <div class="usage-guide" style="margin-top: 12px; text-align: center;">
+      <a href="https://github.com/kangour/relex-trans" target="_blank" style="color: #007bff; text-decoration: none;">📦 Github 开源地址</a>
+    </div>
+    <div id="status" class="status"></div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
