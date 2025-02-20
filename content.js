@@ -23,9 +23,12 @@ function createModeSwitchButton() {
 
 // 切换翻译模式
 function toggleTranslationMode() {
-    isCommandPressed = true;
+    if (isCommandPressed) {
+        translationMode = translationMode === 'sentence' ? 'word' : 'sentence';
+    } else {
+        isCommandPressed = true;
+    }
     isManualSelection = false;
-    translationMode = translationMode === 'sentence' ? 'word' : 'sentence';
     showSwitchButton();
     // hidePopup();
 }
@@ -155,6 +158,22 @@ function showTranslation(text, x, y) {
             }
         }
     );
+
+    // 获取当前翻译服务名称
+    chrome.storage.sync.get(['translator'], (result) => {
+        const translatorNames = {
+            'google': '谷歌',
+            'microsoft': '微软',
+            'youdao': '有道',
+            'deepseek': '深度',
+            'kimi': 'Kimi',
+            'chatgpt': 'GPT',
+            'zhipu': '智谱AI',
+            'other': ''
+        };
+        const currentTranslator = result.translator || 'other';
+        translationPopup.textContent = `${translatorNames[currentTranslator]}翻译中...`;
+    });
 }
 
 // 在页面卸载时清空缓存
