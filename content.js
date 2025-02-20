@@ -297,7 +297,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 function hideSwitchButton() {
     if (modeSwitchButton) {
-        modeSwitchButton.style.display = 'none'; // 隐藏按钮
+        if (modeSwitchButton.style.display == "block") {
+            modeSwitchButton.style.display = 'none'; // 隐藏按钮
+        }
     }
 }
 
@@ -332,20 +334,16 @@ document.addEventListener('keydown', (e) => {
     }
 
     // 如果是功能性组合键，则忽略
-    if ((e.metaKey || e.altKey || e.ctrlKey) && (e.key === 'd' || e.key === 'z' || e.key === 'x' || e.key === 'c' || e.key === 'v' || e.key === 'a' || e.key === 'f' || e.key === 'p' || e.key === 'r' || e.key === 's')) {
+    if ((e.metaKey || e.altKey || e.ctrlKey) && (e.key !== 'Meta' && e.key !== 'Alt' && e.key !== 'Control')) {
         // showModeHint(`🙅 按下组合键，不翻译：${e.metaKey ? '⌘' : ''}${e.altKey ? '⌥' : ''}${e.ctrlKey ? '⌃' : ''}${e.key}`)
+        // console.log("功能组合键，不翻译")
         isCombinationKey = true
         hidePopup();
         return;
     }
-    // 选词翻译
-    if (e.key === 'Meta' || e.key === 'Alt' || e.key === 'Control') {
-        const selectedText = getSelectedText();
-        if (selectedText) {
-            debounceTranslation(selectedText, lastMouseX, lastMouseY);
-        } else {
-        }
-    }
+    // // 选词翻译
+    // if (e.key === 'Meta' || e.key === 'Alt' || e.key === 'Control') {
+    // }
 });
 
 document.addEventListener('keyup', (e) => {
@@ -355,6 +353,12 @@ document.addEventListener('keyup', (e) => {
             isCombinationKey = false;
             hidePopup();
             return;
+        }
+
+        const selectedText = getSelectedText();
+        if (selectedText) {
+            debounceTranslation(selectedText, lastMouseX, lastMouseY);
+        } else {
         }
         // if (isManualSelection) {
         //     // showModeHint("🙅 人工选择，不触发")
