@@ -1,12 +1,10 @@
 // 加载已保存的设置
-chrome.storage.sync.get(['translator', 'microsoftApiKey', 'youdaoApiKey', 'deepseekApiKey', 'kimiApiKey', 'chatgptApiKey', 'zhipuApiKey'], (result) => {
+chrome.storage.sync.get(['translator', 'youdaoApiKey', 'deepseekApiKey', 'kimiApiKey', 'chatgptApiKey', 'zhipuApiKey'], (result) => {
   if (result.translator) {
     document.getElementById('translator').value = result.translator;
   }
-  const translator = result.translator || 'google';
-  if (translator === 'microsoft' && result.microsoftApiKey) {
-    document.getElementById('apiKey').value = result.microsoftApiKey;
-  } else if (translator === 'youdao' && result.youdaoApiKey) {
+  const translator = result.translator || 'microsoft';
+  if (translator === 'youdao' && result.youdaoApiKey) {
     document.getElementById('apiKey').value = result.youdaoApiKey;
   } else if (translator === 'deepseek' && result.deepseekApiKey) {
     document.getElementById('apiKey').value = result.deepseekApiKey;
@@ -18,8 +16,13 @@ chrome.storage.sync.get(['translator', 'microsoftApiKey', 'youdaoApiKey', 'deeps
     document.getElementById('apiKey').value = result.zhipuApiKey;
   }
   // 初始化重置按钮的显示状态
-  document.getElementById('clearApiKey').style.display = translator === 'google' ? 'none' : 'block';
-  document.getElementById('applyApiKey').style.display = translator === 'google' ? 'none' : 'block';
+  document.getElementById('clearApiKey').style.display = (translator === 'google' || translator === 'microsoft') ? 'none' : 'block';
+  document.getElementById('applyApiKey').style.display = (translator === 'google' || translator === 'microsoft') ? 'none' : 'block';
+  document.getElementById('apiKey').disabled = (translator === 'google' || translator === 'microsoft');
+  if (translator === 'google' || translator === 'microsoft') {
+    document.getElementById('apiKey').value = '';
+    document.getElementById('apiKey').placeholder = '谷歌 / 微软翻译无需密钥';
+  }
 });
 
 // 保存设置
@@ -29,7 +32,7 @@ document.getElementById('save').addEventListener('click', () => {
   const status = document.getElementById('status');
 
   // 检查是否需要API密钥
-  if ((translator === 'microsoft' || translator === 'youdao' || translator === 'deepseek' || translator === 'kimi' || translator === 'chatgpt' || translator === 'zhipu') && !apiKey) {
+  if ((translator !== 'google' && translator !== 'microsoft') && !apiKey) {
     status.textContent = '请输入API密钥';
     status.className = 'status error';
     status.style.display = 'block';
@@ -38,9 +41,7 @@ document.getElementById('save').addEventListener('click', () => {
 
   // 根据翻译服务保存对应的API密钥
   const settings = { translator };
-  if (translator === 'microsoft') {
-    settings.microsoftApiKey = apiKey;
-  } else if (translator === 'youdao') {
+  if (translator === 'youdao') {
     settings.youdaoApiKey = apiKey;
   } else if (translator === 'deepseek') {
     settings.deepseekApiKey = apiKey;
@@ -76,13 +77,15 @@ document.getElementById('translator').addEventListener('change', (e) => {
   const status = document.getElementById('status');
   status.style.display = 'none';
   
-  if (e.target.value === 'google') {
+  if (e.target.value === 'google' || e.target.value === 'microsoft') {
     apiKeyInput.value = '';
     apiKeyInput.disabled = true;
+    apiKeyInput.placeholder = '谷歌 / 微软翻译无需密钥';
     clearApiKeyButton.style.display = 'none';
     applyApiKeyButton.style.display = 'none';
   } else {
     apiKeyInput.disabled = false;
+    apiKeyInput.placeholder = '请输入API密钥';
     clearApiKeyButton.style.display = 'block';
     applyApiKeyButton.style.display = 'block';
     // 加载对应服务的API密钥

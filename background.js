@@ -1,4 +1,4 @@
-let currentTranslator = 'google';
+let currentTranslator = 'microsoft';
 let microsoftApiKey = '';
 let youdaoApiKey = '';
 let deepseekApiKey = '';
