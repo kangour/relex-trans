@@ -134,15 +134,16 @@ async function googleTranslate(text) {
 
 // 微软翻译
 async function microsoftTranslate(text) {
-  if (!microsoftApiKey) {
-    throw new Error('请先设置微软翻译API密钥');
-  }
+  // 获取授权凭证
+  const authResponse = await fetch('https://edge.microsoft.com/translate/auth');
+  const authToken = await authResponse.text();
 
-  const response = await fetch('https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=auto&to=zh-Hans', {
+  // 调用翻译接口
+  const response = await fetch('https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=en&to=zh-Hans&includeSentenceLength=true', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Ocp-Apim-Subscription-Key': microsoftApiKey,
+      'Authorization': `Bearer ${authToken}`,
     },
     body: JSON.stringify([{ text }]),
   });
