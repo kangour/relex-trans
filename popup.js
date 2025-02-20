@@ -17,9 +17,14 @@ chrome.storage.sync.get(['translator', 'deepseekApiKey', 'kimiApiKey', 'chatgptA
   document.getElementById('clearApiKey').style.display = (translator === 'google' || translator === 'microsoft') ? 'none' : 'block';
   document.getElementById('applyApiKey').style.display = (translator === 'google' || translator === 'microsoft') ? 'none' : 'block';
   document.getElementById('apiKey').disabled = (translator === 'google' || translator === 'microsoft');
+
   if (translator === 'google' || translator === 'microsoft') {
     document.getElementById('apiKey').value = '';
-    document.getElementById('apiKey').placeholder = '谷歌 / 微软翻译无需密钥';
+    document.getElementById('apiKey').document.getElementById('apiKey').placeholder = '谷歌 / 微软翻译无需密钥';
+  } else {
+    if (document.getElementById('apiKey').value) {
+      document.getElementById('apiKey').disabled = true;
+    }
   }
 });
 
@@ -72,7 +77,7 @@ document.getElementById('translator').addEventListener('change', (e) => {
   const applyApiKeyButton = document.getElementById('applyApiKey');
   const status = document.getElementById('status');
   status.style.display = 'none';
-  
+
   if (e.target.value === 'google' || e.target.value === 'microsoft') {
     apiKeyInput.value = '';
     apiKeyInput.disabled = true;
@@ -81,7 +86,7 @@ document.getElementById('translator').addEventListener('change', (e) => {
     applyApiKeyButton.style.display = 'none';
   } else {
     apiKeyInput.disabled = false;
-    apiKeyInput.placeholder = '请输入API密钥';
+    apiKeyInput.placeholder = '请输入密钥';
     clearApiKeyButton.style.display = 'block';
     applyApiKeyButton.style.display = 'block';
     // 加载对应服务的API密钥
@@ -89,7 +94,9 @@ document.getElementById('translator').addEventListener('change', (e) => {
       const key = result[`${e.target.value}ApiKey`];
       if (key) {
         apiKeyInput.value = key;
+        apiKeyInput.disabled = true;
       } else {
+        apiKeyInput.disabled = false;
         apiKeyInput.value = '';
       }
     });
@@ -120,21 +127,11 @@ document.getElementById('clearApiKey').addEventListener('click', () => {
   apiKeyInput.disabled = false;
 
   // 清除当前选中服务的API密钥
-  const keyToRemove = `${translator}ApiKey`;
-  chrome.storage.sync.remove(keyToRemove, () => {
-    const status = document.getElementById('status');
-    status.textContent = 'API密钥已清空';
-    status.className = 'status success';
-    status.style.display = 'block';
-    setTimeout(() => {
-      status.style.display = 'none';
-    }, 2000);
-  });
+  const status = document.getElementById('status');
+  status.textContent = 'API密钥已清空';
+  status.className = 'status success';
+  status.style.display = 'block';
+  setTimeout(() => {
+    status.style.display = 'none';
+  }, 2000);
 });
-
-// 初始化API密钥输入框和重置按钮状态
-if (document.getElementById('translator').value === 'google') {
-  document.getElementById('apiKey').disabled = true;
-  document.getElementById('clearApiKey').style.display = 'none';
-  document.getElementById('applyApiKey').style.display = 'none';
-}
