@@ -10,11 +10,10 @@
 - 🌐 **丰富的翻译服务**：
   - 谷歌翻译（免费，无需API密钥）
   - 微软翻译
-  - 有道翻译
   - DeepSeek翻译
+  - 智谱AI翻译
   - Kimi翻译
   - ChatGPT翻译
-  - 智谱AI翻译
 - 🎯 **右键菜单支持**：快速切换翻译模式
 - ⚙️ **灵活配置**：可自由切换不同的翻译服务
 
@@ -49,7 +48,6 @@
 
 除谷歌翻译外，其他翻译服务都需要配置API密钥：
 
-- **有道翻译**：访问 [有道智云](https://ai.youdao.com/product-fanyi-text.s) 申请API密钥
 - **DeepSeek**：访问 [DeepSeek Platform](https://platform.deepseek.com/account) 获取API密钥
 - **Kimi**：访问 [Moonshot Console](https://platform.moonshot.cn/console/api-keys) 创建API密钥
 - **ChatGPT**：访问 [OpenAI Platform](https://platform.openai.com/api-keys) 获取API密钥

@@ -164,7 +164,6 @@ function showTranslation(text, x, y) {
         const translatorNames = {
             'google': '谷歌',
             'microsoft': '微软',
-            'youdao': '有道',
             'deepseek': '深度',
             'kimi': 'Kimi',
             'chatgpt': 'GPT',

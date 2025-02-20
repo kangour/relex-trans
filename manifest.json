@@ -16,8 +16,11 @@
   ],
   "host_permissions": [
     "https://api.cognitive.microsofttranslator.com/*",
-    "https://translate.youdao.com/*",
-    "https://translate.googleapis.com/*"
+    "https://edge.microsoft.com/*",
+    "https://translate.googleapis.com/*",
+    "https://api.moonshot.cn/*",
+    "https://open.bigmodel.cn/*",
+    "https://api.deepseek.com/*"
   ],
   "background": {
     "service_worker": "background.js"

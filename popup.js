@@ -1,12 +1,10 @@
 // 加载已保存的设置
-chrome.storage.sync.get(['translator', 'youdaoApiKey', 'deepseekApiKey', 'kimiApiKey', 'chatgptApiKey', 'zhipuApiKey'], (result) => {
+chrome.storage.sync.get(['translator', 'deepseekApiKey', 'kimiApiKey', 'chatgptApiKey', 'zhipuApiKey'], (result) => {
   if (result.translator) {
     document.getElementById('translator').value = result.translator;
   }
   const translator = result.translator || 'microsoft';
-  if (translator === 'youdao' && result.youdaoApiKey) {
-    document.getElementById('apiKey').value = result.youdaoApiKey;
-  } else if (translator === 'deepseek' && result.deepseekApiKey) {
+  if (translator === 'deepseek' && result.deepseekApiKey) {
     document.getElementById('apiKey').value = result.deepseekApiKey;
   } else if (translator === 'kimi' && result.kimiApiKey) {
     document.getElementById('apiKey').value = result.kimiApiKey;
@@ -41,9 +39,7 @@ document.getElementById('save').addEventListener('click', () => {
 
   // 根据翻译服务保存对应的API密钥
   const settings = { translator };
-  if (translator === 'youdao') {
-    settings.youdaoApiKey = apiKey;
-  } else if (translator === 'deepseek') {
+  if (translator === 'deepseek') {
     settings.deepseekApiKey = apiKey;
   } else if (translator === 'kimi') {
     settings.kimiApiKey = apiKey;
@@ -105,7 +101,6 @@ document.getElementById('applyApiKey').addEventListener('click', () => {
   const translator = document.getElementById('translator').value;
   const apiUrls = {
     microsoft: 'https://portal.azure.com/#create/Microsoft.CognitiveServicesTextTranslation',
-    youdao: 'https://ai.youdao.com/product-fanyi-text.s',
     deepseek: 'https://platform.deepseek.com/account',
     kimi: 'https://platform.moonshot.cn/console/api-keys',
     chatgpt: 'https://platform.openai.com/api-keys',

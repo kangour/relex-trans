@@ -1,22 +1,19 @@
 let currentTranslator = 'microsoft';
 let microsoftApiKey = '';
-let youdaoApiKey = '';
 let deepseekApiKey = '';
 let kimiApiKey = '';
 let chatgptApiKey = '';
 let zhipuApiKey = '';
 
 // 从storage中加载配置
-chrome.storage.sync.get(['translator', 'microsoftApiKey', 'youdaoApiKey', 'deepseekApiKey', 'kimiApiKey', 'chatgptApiKey', 'zhipuApiKey'], (result) => {
+chrome.storage.sync.get(['translator', 'microsoftApiKey', 'deepseekApiKey', 'kimiApiKey', 'chatgptApiKey', 'zhipuApiKey'], (result) => {
   if (result.translator) {
     currentTranslator = result.translator;
   }
   if (result.microsoftApiKey) {
     microsoftApiKey = result.microsoftApiKey;
   }
-  if (result.youdaoApiKey) {
-    youdaoApiKey = result.youdaoApiKey;
-  }
+
   if (result.deepseekApiKey) {
     deepseekApiKey = result.deepseekApiKey;
   }
@@ -39,9 +36,7 @@ chrome.storage.onChanged.addListener((changes) => {
   if (changes.microsoftApiKey) {
     microsoftApiKey = changes.microsoftApiKey.newValue;
   }
-  if (changes.youdaoApiKey) {
-    youdaoApiKey = changes.youdaoApiKey.newValue;
-  }
+
   if (changes.deepseekApiKey) {
     deepseekApiKey = changes.deepseekApiKey.newValue;
   }
@@ -91,7 +86,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         const translatorNames = {
           'google': '谷歌翻译',
           'microsoft': '微软翻译',
-          'youdao': '有道翻译',
+
           'deepseek': 'DeepSeek翻译',
           'kimi': 'Kimi翻译',
           'chatgpt': 'ChatGPT翻译',
@@ -108,8 +103,7 @@ async function translateText(text) {
   switch (currentTranslator) {
     case 'microsoft':
       return await microsoftTranslate(text);
-    case 'youdao':
-      return await youdaoTranslate(text);
+
     case 'deepseek':
       return await deepseekTranslate(text);
     case 'kimi':
@@ -151,32 +145,6 @@ async function microsoftTranslate(text) {
   console.log("微软翻译请求结果：", response)
   const data = await response.json();
   return data[0].translations[0].text;
-}
-
-// 有道翻译
-async function youdaoTranslate(text) {
-  if (!youdaoApiKey) {
-    throw new Error('请先设置有道翻译API密钥');
-  }
-
-  const response = await fetch('https://openapi.youdao.com/api', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: new URLSearchParams({
-      q: text,
-      from: 'auto',
-      to: 'zh-CHS',
-      appKey: youdaoApiKey,
-      salt: Date.now(),
-      sign: generateYoudaoSign(text, youdaoApiKey),
-    }),
-  });
-
-  console.log("有道翻译请求结果：", response)
-  const data = await response.json();
-  return data.translation[0];
 }
 
 // DeepSeek翻译
@@ -318,14 +286,4 @@ async function zhipuTranslate(text) {
     throw new Error(data.error.message || '翻译请求失败');
   }
   return data.choices[0].message.content;
-}
-
-// 生成有道翻译签名
-function generateYoudaoSign(text, appKey) {
-  const salt = Date.now();
-  const str = appKey + text + salt + appKey;
-  return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str))
-    .then(buffer => Array.from(new Uint8Array(buffer))
-      .map(b => b.toString(16).padStart(2, '0'))
-      .join(''));
 }
