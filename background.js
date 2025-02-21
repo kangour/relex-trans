@@ -63,6 +63,11 @@ chrome.runtime.onInstalled.addListener(() => {
     title: '开始句子翻译',
     contexts: ['all']
   });
+  chrome.contextMenus.create({
+    id: 'settings',
+    title: 'AI 设置',
+    contexts: ['all']
+  });
 });
 
 // 处理右键菜单点击事件
@@ -71,6 +76,8 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     chrome.tabs.sendMessage(tab.id, { type: 'switchMode', mode: 'word' });
   } else if (info.menuItemId === 'sentenceTranslation') {
     chrome.tabs.sendMessage(tab.id, { type: 'switchMode', mode: 'sentence' });
+  } else if (info.menuItemId === 'settings') {
+    chrome.action.openPopup();
   }
 });
 

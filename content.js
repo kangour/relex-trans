@@ -10,18 +10,18 @@ let translationMode = 'sentence'; // 'sentence' or 'word'
 let modeSwitchButton = null;
 let isCombinationKey = false;
 
-// 创建模式切换按钮
+// 创建场景切换按钮
 function createModeSwitchButton() {
     const button = document.createElement('div');
     button.className = 'mode-switch-button';
-    button.textContent = `当前：${translationMode === 'sentence' ? '<句子>' : '单词'}翻译模式`;
+    button.textContent = `当前：${translationMode === 'sentence' ? '句子' : '单词'}翻译场景`;
     button.addEventListener('click', toggleTranslationMode);
     button.style.display = 'none'; // 初始状态隐藏
     document.body.appendChild(button);
     return button;
 }
 
-// 切换翻译模式
+// 切换翻译场景
 function toggleTranslationMode() {
     if (isCommandPressed) {
         translationMode = translationMode === 'sentence' ? 'word' : 'sentence';
@@ -33,18 +33,18 @@ function toggleTranslationMode() {
     // hidePopup();
 }
 
-// // 开启翻译模式
+// // 开启翻译场景
 // function startTranslationMode() {
 //     isCommandPressed = true;
 //     isManualSelection = false;
 //     if (modeSwitchButton) {
 //         modeSwitchButton.style.display = 'block'; // 显示按钮
 //         if (translationMode === 'sentence') {
-//             modeSwitchButton.textContent = `当前：句子翻译模式`;
-//             showModeHint("✅ 启动自动翻译，移动鼠标，翻译句子 (ESC 退出)");
+//             modeSwitchButton.textContent = `当前：句子翻译场景`;
+//             showModeHint("✅ 启动自动翻译，移动鼠标，翻译句子(ESC 退出)");
 //         }
 //         else if (translationMode === 'word') {
-//             modeSwitchButton.textContent = `当前：单词翻译模式`;
+//             modeSwitchButton.textContent = `当前：单词翻译场景`;
 //             showModeHint("✅ 启动自动翻译，移动鼠标，翻译单词 (ESC 退出)");
 //         }
 //     }
@@ -52,27 +52,27 @@ function toggleTranslationMode() {
 // }
 
 
-// 切换为句子翻译模式
+// 切换为句子翻译场景
 function switchToSentenceTranslationMode() {
     translationMode = 'sentence';
     showSwitchButton();
     if (modeSwitchButton) {
-        modeSwitchButton.textContent = `当前：<句子> 翻译模式`;
+        modeSwitchButton.textContent = `当前：句子翻译场景`;
     }
     // hidePopup();
 }
 
-// 切换为单词翻译模式
+// 切换为单词翻译场景
 function switchToWordTranslationMode() {
     translationMode = 'word';
     showSwitchButton();
     if (modeSwitchButton) {
-        modeSwitchButton.textContent = `当前：单词翻译模式`;
+        modeSwitchButton.textContent = `当前：单词翻译场景`;
     }
     // hidePopup();
 }
 
-// 初始化模式切换按钮
+// 初始化场景切换按钮
 modeSwitchButton = createModeSwitchButton();
 
 // 创建翻译结果浮窗
@@ -307,12 +307,12 @@ function showSwitchButton() {
     if (modeSwitchButton) {
         modeSwitchButton.style.display = 'block'; // 显示按钮
         if (translationMode === 'sentence') {
-            modeSwitchButton.textContent = `当前：<句子> 翻译模式`;
-            showModeHint("<句子> 翻译模式，🖱️ 鼠标移到句子上。(ESC 退出)");
+            modeSwitchButton.textContent = `当前：句子翻译场景`;
+            showModeHint("句子翻译，🖱️ 鼠标移到句子上 (ESC 退出)");
         }
         else if (translationMode === 'word') {
-            modeSwitchButton.textContent = `当前：单词翻译模式`;
-            showModeHint("单词翻译模式，🖱️ 鼠标移到单词上。(ESC 退出)");
+            modeSwitchButton.textContent = `当前：单词翻译场景`;
+            showModeHint("单词翻译，🖱️ 鼠标移到单词上 (ESC 退出)");
         }
     }
 }
@@ -365,12 +365,12 @@ document.addEventListener('keyup', (e) => {
         //     isManualSelection = false;
         //     return;
         // }
-        // // 切换翻译模式
+        // // 切换翻译场景
         // if (e.key === 'Control') {
         //     // isCommandPressed = true;
         //     // isManualSelection = false;
         // }
-        // 开始翻译 / 切换翻译模式
+        // 开始翻译 / 切换翻译场景
         // startTranslationMode();
         toggleTranslationMode();
     }
@@ -443,7 +443,7 @@ document.addEventListener('mousemove', (e) => {
     }
 
     if (translationMode === 'word') {
-        // 单词翻译模式
+        // 单词翻译场景
         const word = getWordAtPoint(elem, lastMouseX, lastMouseY);
         if (word) {
             debounceTranslation(word, lastMouseX, lastMouseY);
@@ -508,7 +508,7 @@ document.addEventListener('mousemove', (e) => {
             }
         }
     } else {
-        console.log("未知的翻译模式", translationMode)
+        console.log("未知的翻译场景", translationMode)
     }
 });
 
