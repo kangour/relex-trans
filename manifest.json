@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Relax Translator",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Relax 轻松翻译，自动识别鼠标附近的文字，达到跟随鼠标实时翻译的效果，让阅读外文轻松自在。按（Ctrl/Command/Alt）键启动。",
   "icons": {
     "16": "icons/icon16.png",
