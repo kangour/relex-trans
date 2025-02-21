@@ -86,7 +86,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         const translatorNames = {
           'google': '谷歌翻译',
           'microsoft': '微软翻译',
-
           'deepseek': 'DeepSeek翻译',
           'kimi': 'Kimi翻译',
           'chatgpt': 'ChatGPT翻译',
@@ -164,11 +163,11 @@ async function deepseekTranslate(text) {
       messages: [
         {
           role: 'system',
-          content: '你是一个翻译助手，请将用户输入的文本翻译成中文，只需要输出翻译结果，不需要解释。'
+          content: '你是一个中英文翻译助手，请翻译用户输入的文本，只需要输出翻译结果，不需要解释。'
         },
         {
           role: 'user',
-          content: text
+          content: `请翻译：${text}`
         }
       ]
     })
@@ -198,11 +197,11 @@ async function kimiTranslate(text) {
       messages: [
         {
           role: 'system',
-          content: '你是一个翻译助手，请将用户输入的文本翻译成中文，只需要输出翻译结果，不需要解释。'
+          content: '你是一个中英文翻译助手，请翻译用户输入的文本，只需要输出翻译结果，不需要解释。'
         },
         {
           role: 'user',
-          content: text
+          content: `请翻译：${text}`
         }
       ]
     })
@@ -233,11 +232,11 @@ async function chatgptTranslate(text) {
       messages: [
         {
           role: 'system',
-          content: '你是一个翻译助手，请将用户输入的文本翻译成中文，只需要输出翻译结果，不需要解释。'
+          content: '你是一个中英文翻译助手，请翻译用户输入的文本，只需要输出翻译结果，不需要解释。'
         },
         {
           role: 'user',
-          content: text
+          content: `请翻译：${text}`
         }
       ]
     })
@@ -269,11 +268,11 @@ async function zhipuTranslate(text) {
       messages: [
         {
           role: 'system',
-          content: '你是一个翻译助手，请将用户输入的文本翻译成中文，只需要输出翻译结果，不需要解释。'
+          content: '你是一个中英文翻译助手，请翻译用户输入的文本，只需要输出翻译结果，不需要解释。'
         },
         {
           role: 'user',
-          content: text
+          content: `请翻译：${text}`
         }
       ],
       stream: false
