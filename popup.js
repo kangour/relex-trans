@@ -20,7 +20,7 @@ chrome.storage.sync.get(['translator', 'deepseekApiKey', 'kimiApiKey', 'chatgptA
 
   if (translator === 'google' || translator === 'microsoft') {
     document.getElementById('apiKey').value = '';
-    document.getElementById('apiKey').document.getElementById('apiKey').placeholder = '谷歌 / 微软翻译无需密钥';
+    document.getElementById('apiKey').document.getElementById('apiKey').placeholder = '谷歌 / 微软翻译无需密钥。';
   } else {
     if (document.getElementById('apiKey').value) {
       document.getElementById('apiKey').disabled = true;
@@ -81,7 +81,7 @@ document.getElementById('translator').addEventListener('change', (e) => {
   if (e.target.value === 'google' || e.target.value === 'microsoft') {
     apiKeyInput.value = '';
     apiKeyInput.disabled = true;
-    apiKeyInput.placeholder = '谷歌 / 微软翻译无需密钥';
+    apiKeyInput.placeholder = '谷歌 / 微软翻译无需密钥。';
     clearApiKeyButton.style.display = 'none';
     applyApiKeyButton.style.display = 'none';
   } else {
