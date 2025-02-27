@@ -1,14 +1,17 @@
-# Relax Translator 轻松翻译插件
+# 轻松翻译 - 自动化翻译 (Relax Trans)
 
-一款由人工智能（AI）自动编写的，简单易用的浏览器翻译插件，自动识别鼠标附近的文字，跟随鼠标实时翻译，让阅读外文轻松专注。按（Ctrl/Command/Alt）键启动。
+一款完全由人工智能（AI）编写的浏览器翻译插件，能自动识别鼠标附近的文字，跟随鼠标实时翻译。按（Ctrl/Command/Alt）功能键启动，支持自定义启动键。
+
+> 开源免费，简约好用，阅读外文更专注。
 
 ## 📖 使用说明
 
 ### 快捷键操作
 
-1. 按 Ctrl（Windows）/ Command（Mac）/ Alt 键启动翻译模式。
+1. 按 Ctrl（Windows）/ Command（Mac）/ Alt 功能键启动翻译模式。
 2. 将鼠标移动到需要翻译的文本上，翻译结果会实时显示在鼠标附近。
-3. 再次按 Ctrl（Windows）/ Command（Mac）/ Alt 可以在单词翻译和句子翻译之间切换。
+3. 再次按功能键可以在单词翻译和句子翻译之间切换。
+4. 人工选择需要翻译的内容，按功能键可以实现自定义翻译。
 
 ### 右键菜单
 
@@ -26,18 +29,17 @@
 
 ## ✨ 特色功能
 
-- 🕗 **实时翻译**
-- 🔄 **翻译模式切换**
+- 🕗 **自动框选词句，实时翻译**
 - 🚀 **选择翻译**
-- 🌐 **丰富的翻译服务**：
+- ⚙️ **灵活配置**：可自由切换不同的翻译服务
+- 🌐 **丰富的翻译服务**：多种 AI 翻译服务可供选择
+
   - 谷歌翻译（免费，无需API密钥）
   - 微软翻译（免费，无需API密钥）
   - DeepSeek翻译
   - 智谱AI翻译
   - Kimi翻译
   - ChatGPT翻译
-- 🎯 **右键菜单支持**：快速切换翻译模式
-- ⚙️ **灵活配置**：可自由切换不同的翻译服务
 
 ## 📸 项目截图
 
@@ -53,9 +55,15 @@
 
 ## 🚀 从浏览器应用商店安装
 
-Google 浏览器应用商店安装：[Relax Translator(轻松翻译)](https://chromewebstore.google.com/detail/relax-translator/acmocohkjfakneioiidbpgfjmehpmfcm)
+1. 访问Chrome/Edge网上应用店
+2. 搜索「轻松翻译 - 自动化翻译」
+3. 点击「添加至Chrome」按钮
 
-Edge 浏览器应用商店安装：[Relax Translator(轻松翻译)](https://microsoftedge.microsoft.com/addons/detail/olmjgggbmcbieaimmcloklanadppmedn)
+> 快捷导航：
+
+Google 浏览器应用商店安装：[轻松翻译 - 自动化翻译](https://chromewebstore.google.com/detail/relax-translator/acmocohkjfakneioiidbpgfjmehpmfcm)
+
+Edge 浏览器应用商店安装：[轻松翻译 - 自动化翻译](https://microsoftedge.microsoft.com/addons/detail/olmjgggbmcbieaimmcloklanadppmedn)
 
 ## 🚀 从源码安装方法
 
@@ -82,27 +90,3 @@ Edge 浏览器应用商店安装：[Relax Translator(轻松翻译)](https://micr
 ## 📄 开源协议
 
 本项目采用 MIT 协议开源，详见 [LICENSE](LICENSE) 文件。
-
-## 🙏 致谢
-
-感谢所有为本项目提供支持和帮助的贡献者！
-
-**内测反馈**
-
-@蔡🤔
-@Zhao先森
-@贰零贰号
-@Pan🐷
-@Expectation
-@錦
-
-**AI开发声明**
-
-本软件，所有功能完全由 AI 生成，人工仅参与修改 1% 的样式和 5% 的逻辑优化。
-
-开发者如果有改进想法，可以直接用 AI 编程工具进行修改。
-
- - Cursor
- - Trae
- - Tongyiqianwen
- - Gemini Code Assist 

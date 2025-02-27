@@ -1,8 +1,14 @@
 // 加载已保存的设置
-chrome.storage.sync.get(['translator', 'deepseekApiKey', 'kimiApiKey', 'chatgptApiKey', 'zhipuApiKey'], (result) => {
+chrome.storage.sync.get(['translator', 'deepseekApiKey', 'kimiApiKey', 'chatgptApiKey', 'zhipuApiKey', 'ctrlTrigger', 'altTrigger', 'commandTrigger', 'rightClickTrigger'], (result) => {
   if (result.translator) {
     document.getElementById('translator').value = result.translator;
   }
+
+  // 加载启动方式配置
+  document.getElementById('ctrlTrigger').checked = result.ctrlTrigger !== undefined ? result.ctrlTrigger : true;
+  document.getElementById('altTrigger').checked = result.altTrigger !== undefined ? result.altTrigger : true;
+  document.getElementById('commandTrigger').checked = result.commandTrigger !== undefined ? result.commandTrigger : true;
+  document.getElementById('rightClickTrigger').checked = result.rightClickTrigger !== undefined ? result.rightClickTrigger : true;
   const translator = result.translator || 'microsoft';
   if (translator === 'deepseek' && result.deepseekApiKey) {
     document.getElementById('apiKey').value = result.deepseekApiKey;
@@ -19,8 +25,7 @@ chrome.storage.sync.get(['translator', 'deepseekApiKey', 'kimiApiKey', 'chatgptA
   document.getElementById('apiKey').disabled = (translator === 'google' || translator === 'microsoft');
 
   if (translator === 'google' || translator === 'microsoft') {
-    document.getElementById('apiKey').value = '';
-    document.getElementById('apiKey').document.getElementById('apiKey').placeholder = '谷歌 / 微软翻译无需密钥。';
+    document.getElementById('apiKeyGroup').style.display = 'none';
   } else {
     if (document.getElementById('apiKey').value) {
       document.getElementById('apiKey').disabled = true;
@@ -28,8 +33,7 @@ chrome.storage.sync.get(['translator', 'deepseekApiKey', 'kimiApiKey', 'chatgptA
   }
 });
 
-// 保存设置
-document.getElementById('save').addEventListener('click', () => {
+function toSave() {
   const translator = document.getElementById('translator').value;
   const apiKey = document.getElementById('apiKey').value;
   const status = document.getElementById('status');
@@ -39,11 +43,26 @@ document.getElementById('save').addEventListener('click', () => {
     status.textContent = '请输入API密钥';
     status.className = 'status error';
     status.style.display = 'block';
+    setTimeout(() => {
+      status.style.display = 'none';
+    }, 2000);
     return;
   }
 
-  // 根据翻译服务保存对应的API密钥
-  const settings = { translator };
+  // 获取启动方式的配置
+  const ctrlTrigger = document.getElementById('ctrlTrigger').checked;
+  const altTrigger = document.getElementById('altTrigger').checked;
+  const commandTrigger = document.getElementById('commandTrigger').checked;
+  const rightClickTrigger = document.getElementById('rightClickTrigger').checked;
+
+  // 根据翻译服务保存对应的API密钥和启动方式
+  const settings = {
+    translator,
+    ctrlTrigger,
+    altTrigger,
+    commandTrigger,
+    rightClickTrigger
+  };
   if (translator === 'deepseek') {
     settings.deepseekApiKey = apiKey;
   } else if (translator === 'kimi') {
@@ -68,27 +87,33 @@ document.getElementById('save').addEventListener('click', () => {
       status.style.display = 'none';
     }, 2000);
   });
+
+}
+
+// 保存设置
+document.getElementById('save').addEventListener('click', () => {
+  toSave();
 });
 
 // 监听翻译服务选择变化
 document.getElementById('translator').addEventListener('change', (e) => {
+  const apiKeyGroup = document.getElementById('apiKeyGroup');
   const apiKeyInput = document.getElementById('apiKey');
-  const clearApiKeyButton = document.getElementById('clearApiKey');
-  const applyApiKeyButton = document.getElementById('applyApiKey');
+  const applyApiKey = document.getElementById('applyApiKey');
+  const clearApiKey = document.getElementById('clearApiKey');
   const status = document.getElementById('status');
   status.style.display = 'none';
 
   if (e.target.value === 'google' || e.target.value === 'microsoft') {
-    apiKeyInput.value = '';
-    apiKeyInput.disabled = true;
-    apiKeyInput.placeholder = '谷歌 / 微软翻译无需密钥。';
-    clearApiKeyButton.style.display = 'none';
-    applyApiKeyButton.style.display = 'none';
+    apiKeyGroup.style.display = "none";
+    applyApiKey.style.display = "none";
+    clearApiKey.style.display = "none";
+    toSave();
   } else {
-    apiKeyInput.disabled = false;
-    apiKeyInput.placeholder = '请输入密钥';
-    clearApiKeyButton.style.display = 'block';
-    applyApiKeyButton.style.display = 'block';
+    apiKeyGroup.style.display = "block";
+    applyApiKey.style.display = "block";
+    clearApiKey.style.display = "block";
+
     // 加载对应服务的API密钥
     chrome.storage.sync.get([`${e.target.value}ApiKey`], (result) => {
       const key = result[`${e.target.value}ApiKey`];
@@ -96,9 +121,10 @@ document.getElementById('translator').addEventListener('change', (e) => {
         apiKeyInput.value = key;
         apiKeyInput.disabled = true;
       } else {
-        apiKeyInput.disabled = false;
         apiKeyInput.value = '';
+        apiKeyInput.disabled = false;
       }
+      toSave();
     });
   }
 });
@@ -108,7 +134,7 @@ document.getElementById('applyApiKey').addEventListener('click', () => {
   const translator = document.getElementById('translator').value;
   const apiUrls = {
     microsoft: 'https://portal.azure.com/#create/Microsoft.CognitiveServicesTextTranslation',
-    deepseek: 'https://platform.deepseek.com/account',
+    deepseek: 'https://platform.deepseek.com/api_keys',
     kimi: 'https://platform.moonshot.cn/console/api-keys',
     chatgpt: 'https://platform.openai.com/api-keys',
     zhipu: 'https://open.bigmodel.cn/usercenter/apikeys'
