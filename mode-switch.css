@@ -22,7 +22,7 @@
 
 .mode-hint {
   position: fixed;
-  top: 20vh;
+  top: 10vh;
   left: 50%;
   transform: translate(-50%, 0);
   padding: 12px 24px;
@@ -33,7 +33,7 @@
   line-height: 1.5;
   z-index: 999999;
   opacity: 1;
-  transition: opacity 0.5s ease;
+  transition: all 0.5s ease;
   text-align: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(4px);
