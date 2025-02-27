@@ -4,9 +4,10 @@ let deepseekApiKey = '';
 let kimiApiKey = '';
 let chatgptApiKey = '';
 let zhipuApiKey = '';
+let rightClickTrigger = true;
 
 // 从storage中加载配置
-chrome.storage.sync.get(['translator', 'microsoftApiKey', 'deepseekApiKey', 'kimiApiKey', 'chatgptApiKey', 'zhipuApiKey'], (result) => {
+chrome.storage.sync.get(['translator', 'microsoftApiKey', 'deepseekApiKey', 'kimiApiKey', 'chatgptApiKey', 'zhipuApiKey', 'rightClickTrigger'], (result) => {
   if (result.translator) {
     currentTranslator = result.translator;
   }
@@ -26,7 +27,36 @@ chrome.storage.sync.get(['translator', 'microsoftApiKey', 'deepseekApiKey', 'kim
   if (result.zhipuApiKey) {
     zhipuApiKey = result.zhipuApiKey;
   }
+  // 根据配置创建右键菜单
+  rightClickTrigger = result.rightClickTrigger !== undefined ? result.rightClickTrigger : false;
+  if (rightClickTrigger) {
+    createContextMenus();
+  }
 });
+
+// 创建右键菜单
+function createContextMenus() {
+  chrome.contextMenus.create({
+    id: 'wordTranslation',
+    title: '开始单词翻译',
+    contexts: ['all']
+  });
+  chrome.contextMenus.create({
+    id: 'sentenceTranslation',
+    title: '开始句子翻译',
+    contexts: ['all']
+  });
+  chrome.contextMenus.create({
+    id: 'settings',
+    title: 'AI 设置',
+    contexts: ['all']
+  });
+}
+
+// 移除右键菜单
+function removeContextMenus() {
+  chrome.contextMenus.removeAll();
+}
 
 // 监听storage变化
 chrome.storage.onChanged.addListener((changes) => {
@@ -49,25 +79,21 @@ chrome.storage.onChanged.addListener((changes) => {
   if (changes.zhipuApiKey) {
     zhipuApiKey = changes.zhipuApiKey.newValue;
   }
+  if (changes.rightClickTrigger) {
+    rightClickTrigger = changes.rightClickTrigger.newValue;
+    if (rightClickTrigger) {
+      createContextMenus();
+    } else {
+      removeContextMenus();
+    }
+  }
 });
 
-// 创建右键菜单
+// 初始化右键菜单
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.contextMenus.create({
-    id: 'wordTranslation',
-    title: '开始单词翻译',
-    contexts: ['all']
-  });
-  chrome.contextMenus.create({
-    id: 'sentenceTranslation',
-    title: '开始句子翻译',
-    contexts: ['all']
-  });
-  chrome.contextMenus.create({
-    id: 'settings',
-    title: 'AI 设置',
-    contexts: ['all']
-  });
+  if (rightClickTrigger) {
+    createContextMenus();
+  }
 });
 
 // 处理右键菜单点击事件

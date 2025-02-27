@@ -113,6 +113,25 @@
       background-color: #f2dede;
       color: #a94442;
     }
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      color: #666;
+    }
+    .checkbox-label input[type="checkbox"] {
+      margin: 0;
+      width: 16px;
+      height: 16px;
+    }
   </style>
 </head>
 <body>
@@ -120,8 +139,8 @@
     <h1>翻译设置</h1>
     <div class="usage-guide">
       <ul>
-        <li>🔥 按（Ctrl/Command/Alt）键启动，移动鼠标开始翻译。</li>
-        <li>🔄 再次按（Ctrl/Command/Alt）可以切换单词 / 句子翻译。</li>
+        <li>🔥 按（Ctrl/Command/Alt）功能键启动，移动鼠标开始翻译。</li>
+        <li>🔄 再次按功能键可以在单词和句子翻译之间切换。</li>
         <li>⚙️ 支持 AI 翻译（填写自己的 API 密钥）</li>
       </ul>
     </div>
@@ -136,19 +155,40 @@
         <option value="chatgpt">ChatGPT AI 翻译</option>
       </select>
     </div>
-    <div class="form-group">
+    <div class="form-group" id="apiKeyGroup">
       <label for="apiKey">API密钥：</label>
       <div class="input-group">
-        <input type="text" id="apiKey" placeholder="谷歌 / 微软翻译无需密钥。">
+        <input type="text" id="apiKey" placeholder="请输入密钥">
         <button class="apply-btn" id="applyApiKey">申请</button>
         <button class="clear-btn" id="clearApiKey">重置</button>
       </div>
     </div>
+    <div class="form-group">
+      <label>启动方式：</label>
+      <div class="checkbox-group">
+        <label class="checkbox-label">
+          <input type="checkbox" id="ctrlTrigger" value="ctrl">
+          <span>Ctrl 键</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" id="altTrigger" value="alt">
+          <span>Alt (Windows) / Option (Mac) 键</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" id="commandTrigger" value="command">
+          <span>Command (Mac) 键</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" id="rightClickTrigger" value="rightClick">
+          <span>鼠标右键</span>
+        </label>
+      </div>
+    </div>
     <button class="save-btn" id="save">保存设置</button>
+    <div id="status" class="status"></div>
     <div class="usage-guide" style="margin-top: 12px; text-align: center;">
       <a href="https://github.com/kangour/relex-trans" target="_blank" style="color: #007bff; text-decoration: none;">📦 Github 开源地址</a>
     </div>
-    <div id="status" class="status"></div>
   </div>
   <script src="popup.js"></script>
 </body>

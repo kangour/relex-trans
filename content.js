@@ -10,11 +10,36 @@ let translationMode = 'sentence'; // 'sentence' or 'word'
 let modeSwitchButton = null;
 let isCombinationKey = false;
 
+// 触发键配置
+let ctrlTrigger = true;
+let altTrigger = true;
+let commandTrigger = true;
+
+// 加载触发键配置
+chrome.storage.sync.get(['ctrlTrigger', 'altTrigger', 'commandTrigger'], (result) => {
+    ctrlTrigger = result.ctrlTrigger !== undefined ? result.ctrlTrigger : true;
+    altTrigger = result.altTrigger !== undefined ? result.altTrigger : true;
+    commandTrigger = result.commandTrigger !== undefined ? result.commandTrigger : true;
+});
+
+// 监听配置变化
+chrome.storage.onChanged.addListener((changes) => {
+    if (changes.ctrlTrigger) {
+        ctrlTrigger = changes.ctrlTrigger.newValue;
+    }
+    if (changes.altTrigger) {
+        altTrigger = changes.altTrigger.newValue;
+    }
+    if (changes.commandTrigger) {
+        commandTrigger = changes.commandTrigger.newValue;
+    }
+});
+
 // 创建场景切换按钮
 function createModeSwitchButton() {
     const button = document.createElement('div');
     button.className = 'mode-switch-button';
-    button.textContent = `当前：${translationMode === 'sentence' ? '句子' : '单词'}翻译场景`;
+    button.textContent = `${translationMode === 'sentence' ? '句子' : '单词'} 🔁 翻译场景`;
     button.addEventListener('click', toggleTranslationMode);
     button.style.display = 'none'; // 初始状态隐藏
     document.body.appendChild(button);
@@ -40,11 +65,11 @@ function toggleTranslationMode() {
 //     if (modeSwitchButton) {
 //         modeSwitchButton.style.display = 'block'; // 显示按钮
 //         if (translationMode === 'sentence') {
-//             modeSwitchButton.textContent = `当前：句子翻译场景`;
+//             modeSwitchButton.textContent = `句子翻译场景`;
 //             showModeHint("✅ 启动自动翻译，移动鼠标，翻译句子(ESC 退出)");
 //         }
 //         else if (translationMode === 'word') {
-//             modeSwitchButton.textContent = `当前：单词翻译场景`;
+//             modeSwitchButton.textContent = `单词翻译场景`;
 //             showModeHint("✅ 启动自动翻译，移动鼠标，翻译单词 (ESC 退出)");
 //         }
 //     }
@@ -57,7 +82,7 @@ function switchToSentenceTranslationMode() {
     translationMode = 'sentence';
     showSwitchButton();
     if (modeSwitchButton) {
-        modeSwitchButton.textContent = `当前：句子翻译场景`;
+        modeSwitchButton.textContent = `句子 🔁 翻译场景`;
     }
     // hidePopup();
 }
@@ -67,7 +92,7 @@ function switchToWordTranslationMode() {
     translationMode = 'word';
     showSwitchButton();
     if (modeSwitchButton) {
-        modeSwitchButton.textContent = `当前：单词翻译场景`;
+        modeSwitchButton.textContent = `单词 🔁 翻译场景`;
     }
     // hidePopup();
 }
@@ -136,7 +161,7 @@ function showTranslation(text, x, y) {
     // 保存本次翻译的文本
     lastTranslatedText = text;
 
-    console.log("开始翻译：", text)
+    console.log("Relax 开始翻译：", text)
 
     translationPopup.textContent = '翻译中...';
     translationPopup.style.display = 'block';
@@ -157,6 +182,9 @@ function showTranslation(text, x, y) {
             } else {
                 translationPopup.textContent = '翻译失败';
             }
+            if (isCommandPressed === false) {
+                translationPopup.style.display = 'none';
+            }
         }
     );
 
@@ -173,6 +201,9 @@ function showTranslation(text, x, y) {
         };
         const currentTranslator = result.translator || 'other';
         translationPopup.textContent = `${translatorNames[currentTranslator]}翻译中...`;
+        if (isCommandPressed === false) {
+            translationPopup.style.display = 'none';
+        }
     });
 }
 
@@ -271,11 +302,24 @@ function showModeHint(message) {
     hint.textContent = message;
     document.body.appendChild(hint);
 
-    // 3秒后淡出并移除提示
+    // 强制重绘以确保过渡动画生效
+    hint.offsetHeight;
+
+    hint.style.transform = 'translate(-50%, 20px)';
+    // 使用requestAnimationFrame确保DOM更新后再添加动画
+    requestAnimationFrame(() => {
+        hint.style.transform = 'translate(-50%, -20px)';
+        hint.style.opacity = '1';
+    });
+
+    // 2秒后淡出并移除提示
     setTimeout(() => {
         hint.style.opacity = '0';
+        hint.style.transform = 'translate(-50%, -50px)';
         setTimeout(() => {
-            document.body.removeChild(hint);
+            if (hint.parentNode) {
+                document.body.removeChild(hint);
+            }
         }, 500);
     }, 2000);
 }
@@ -308,7 +352,7 @@ function showSwitchButton() {
     if (modeSwitchButton) {
         modeSwitchButton.style.display = 'block'; // 显示按钮
         if (translationMode === 'sentence') {
-            modeSwitchButton.textContent = `当前：句子翻译场景`;
+            modeSwitchButton.textContent = `句子 🔁 翻译场景`;
             if (isManualSelection === false) {
                 showModeHint("句子翻译，🖱️ 鼠标移到句子上 (ESC 退出)");
             } else {
@@ -316,7 +360,7 @@ function showSwitchButton() {
             }
         }
         else if (translationMode === 'word') {
-            modeSwitchButton.textContent = `当前：单词翻译场景`;
+            modeSwitchButton.textContent = `单词 🔁 翻译场景`;
             if (isManualSelection === false) {
                 showModeHint("单词翻译，🖱️ 鼠标移到单词上 (ESC 退出)");
             } else {
@@ -346,17 +390,24 @@ document.addEventListener('keydown', (e) => {
     if ((e.metaKey || e.altKey || e.ctrlKey) && (e.key !== 'Meta' && e.key !== 'Alt' && e.key !== 'Control')) {
         // showModeHint(`🙅 按下组合键，不翻译：${e.metaKey ? '⌘' : ''}${e.altKey ? '⌥' : ''}${e.ctrlKey ? '⌃' : ''}${e.key}`)
         // console.log("功能组合键，不翻译")
-        isCombinationKey = true
+        isCombinationKey = true;
         hidePopup();
         return;
     }
-    // // 选词翻译
-    // if (e.key === 'Meta' || e.key === 'Alt' || e.key === 'Control') {
-    // }
 });
 
 document.addEventListener('keyup', (e) => {
     if (e.key === 'Meta' || e.key === 'Alt' || e.key === 'Control') {
+        // 检查是否是启用的触发键
+        const isValidTrigger =
+            (e.key === 'Control' && ctrlTrigger) ||
+            (e.key === 'Alt' && altTrigger) ||
+            (e.key === 'Meta' && commandTrigger);
+
+        if (!isValidTrigger) {
+            return;
+        }
+
         if (isCombinationKey) {
             // showModeHint("❌ 松开组合键，不触发")
             isCombinationKey = false;
@@ -367,20 +418,7 @@ document.addEventListener('keyup', (e) => {
         const selectedText = getSelectedText();
         if (selectedText) {
             debounceTranslation(selectedText, lastMouseX, lastMouseY);
-        } else {
         }
-        // if (isManualSelection) {
-        //     // showModeHint("🙅 人工选择，不触发")
-        //     isManualSelection = false;
-        //     return;
-        // }
-        // // 切换翻译场景
-        // if (e.key === 'Control') {
-        //     // isCommandPressed = true;
-        //     // isManualSelection = false;
-        // }
-        // 开始翻译 / 切换翻译场景
-        // startTranslationMode();
         toggleTranslationMode();
     }
 });
@@ -569,7 +607,7 @@ document.addEventListener('mousemove', (e) => {
             if (!isInNode) continue;
 
             // 将文本按标点符号分割成句子
-            const sentences = text.split(/(?<=[.。!！?？;；(（）)\n])/g).filter(s => s.trim());
+            const sentences = text.split(/(?<=[.。!！?？;；:：\n])/g).filter(s => s.trim());
             let currentPos = 0;
 
             for (let sentence of sentences) {
