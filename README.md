@@ -1,4 +1,4 @@
-# Relax Translator 轻松翻译插件
+# 轻松翻译 - 自动跟随鼠标翻译 (Relax Trans)
 
 一款完全由人工智能（AI）编写的浏览器翻译插件，能自动识别鼠标附近的文字，跟随鼠标实时翻译。按（Ctrl/Command/Alt）功能键启动，支持自定义启动键。
 
@@ -55,9 +55,15 @@
 
 ## 🚀 从浏览器应用商店安装
 
-Google 浏览器应用商店安装：[Relax Translator(轻松翻译)](https://chromewebstore.google.com/detail/relax-translator/acmocohkjfakneioiidbpgfjmehpmfcm)
+1. 访问Chrome网上应用店
+2. 搜索「轻松工作 - 自动录制和回放」
+3. 点击「添加至Chrome」按钮
 
-Edge 浏览器应用商店安装：[Relax Translator(轻松翻译)](https://microsoftedge.microsoft.com/addons/detail/olmjgggbmcbieaimmcloklanadppmedn)
+> 快捷导航：
+
+Google 浏览器应用商店安装：[轻松翻译 - 自动跟随鼠标翻译](https://chromewebstore.google.com/detail/relax-translator/acmocohkjfakneioiidbpgfjmehpmfcm)
+
+Edge 浏览器应用商店安装：[轻松翻译 - 自动跟随鼠标翻译](https://microsoftedge.microsoft.com/addons/detail/olmjgggbmcbieaimmcloklanadppmedn)
 
 ## 🚀 从源码安装方法
 
@@ -84,27 +90,3 @@ Edge 浏览器应用商店安装：[Relax Translator(轻松翻译)](https://micr
 ## 📄 开源协议
 
 本项目采用 MIT 协议开源，详见 [LICENSE](LICENSE) 文件。
-
-## 🙏 致谢
-
-感谢所有为本项目提供支持和帮助的贡献者！
-
-**内测反馈**
-
-@蔡🤔
-@Zhao先森
-@贰零贰号
-@Pan🐷
-@Expectation
-@錦
-
-**AI开发声明**
-
-本软件，所有功能完全由 AI 生成，人工仅参与修改 1% 的样式和 5% 的逻辑优化。
-
-开发者如果有改进想法，可以直接用 AI 编程工具进行修改。
-
- - Cursor
- - Trae
- - Tongyiqianwen(插件)
- - Gemini Code Assist(插件)

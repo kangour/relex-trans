@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Relax Trans(轻松翻译)",
+  "name": "轻松翻译 - 自动跟随鼠标翻译",
   "version": "1.0.6",
   "description": "自动识别鼠标附近的文字，跟随鼠标实时翻译，阅读外文更专注。按（Ctrl/Command/Alt）键启动。",
   "icons": {
